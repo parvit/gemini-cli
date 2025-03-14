@@ -26,13 +26,13 @@ func init() {
 
 func runChatCmd(cmd *cobra.Command, args []string) {
 	ctx := context.Background()
-	client, err := newGenaiClient(ctx, cmd)
+	client, err := newGenAiClient(ctx, cmd)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Close()
 
-	modelName, _ := cmd.Flags().GetString("model")
+	modelName := mustGetStringFlagEnvOverride(cmd, "model", MODEL_NAME)
 	model := client.GenerativeModel(modelName)
 	model.SafetySettings = []*genai.SafetySetting{
 		{

@@ -44,7 +44,7 @@ func init() {
 
 func runModelsCmd(cmd *cobra.Command, args []string) {
 	ctx := context.Background()
-	client, err := newGenaiClient(ctx, cmd)
+	client, err := newGenAiClient(ctx, cmd)
 	if err != nil {
 		log.Fatal()
 	}

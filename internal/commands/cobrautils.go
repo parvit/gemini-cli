@@ -1,6 +1,10 @@
 package commands
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/spf13/cobra"
+	"os"
+	"strings"
+)
 
 // mustGetStringFlag gets a string flag value from cmd, and panics if this
 // results in an error (for example, if such a flag wasn't defined for the
@@ -9,6 +13,19 @@ func mustGetStringFlag(cmd *cobra.Command, name string) string {
 	v, err := cmd.Flags().GetString(name)
 	if err != nil {
 		panic(err)
+	}
+	return v
+}
+
+func mustGetStringFlagEnvOverride(cmd *cobra.Command, name string, envName string) string {
+	v, err := cmd.Flags().GetString(name)
+	if err != nil {
+		panic(err)
+	}
+
+	value := strings.TrimSpace(os.Getenv(envName))
+	if len(value) > 0 {
+		return value
 	}
 	return v
 }

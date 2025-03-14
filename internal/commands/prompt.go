@@ -93,13 +93,14 @@ func runPromptCmd(cmd *cobra.Command, args []string) {
 	}
 
 	ctx := context.Background()
-	client, err := newGenaiClient(ctx, cmd)
+	client, err := newGenAiClient(ctx, cmd)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Close()
 
-	model := client.GenerativeModel(mustGetStringFlag(cmd, "model"))
+	modelName := mustGetStringFlagEnvOverride(cmd, "model", MODEL_NAME)
+	model := client.GenerativeModel(modelName)
 
 	if tempValue := mustGetStringFlag(cmd, "temp"); tempValue != "" {
 		f, err := strconv.ParseFloat(tempValue, 32)

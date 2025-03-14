@@ -5,16 +5,15 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/eliben/gemini-cli/internal/apikey"
 	"github.com/google/generative-ai-go/genai"
 	"github.com/spf13/cobra"
 	"google.golang.org/api/option"
 )
 
-// newGenaiClient creates a new genai.Client given the configuration of
+// newGenAiClient creates a new genai.Client given the configuration of
 // cmd flags (for API key, proxy selection, etc.)
-func newGenaiClient(ctx context.Context, cmd *cobra.Command) (*genai.Client, error) {
-	key := apikey.Get(cmd)
+func newGenAiClient(ctx context.Context, cmd *cobra.Command) (*genai.Client, error) {
+	key := mustGetStringFlagEnvOverride(cmd, "key", API_KEY)
 
 	var clientOpts []option.ClientOption
 	if proxyURL, _ := cmd.Flags().GetString("proxy"); len(proxyURL) > 0 {

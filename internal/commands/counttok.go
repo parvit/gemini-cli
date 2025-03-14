@@ -43,12 +43,13 @@ func runCountTokCmd(cmd *cobra.Command, args []string) {
 	}
 
 	ctx := context.Background()
-	client, err := newGenaiClient(ctx, cmd)
+	client, err := newGenAiClient(ctx, cmd)
 	if err != nil {
 		log.Fatal()
 	}
 
-	model := client.GenerativeModel(mustGetStringFlag(cmd, "model"))
+	modelName := mustGetStringFlagEnvOverride(cmd, "model", MODEL_NAME)
+	model := client.GenerativeModel(modelName)
 	resp, err := model.CountTokens(ctx, genai.Text(content))
 	if err != nil {
 		log.Fatal("error counting tokens:", err)

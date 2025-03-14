@@ -59,12 +59,13 @@ func runEmbedSimilarCmd(cmd *cobra.Command, args []string) {
 
 	// Calculate the content's embedding vector
 	ctx := context.Background()
-	client, err := newGenaiClient(ctx, cmd)
+	client, err := newGenAiClient(ctx, cmd)
 	if err != nil {
 		log.Fatal()
 	}
 
-	model := client.EmbeddingModel(mustGetStringFlag(cmd, "model"))
+	modelName := mustGetStringFlagEnvOverride(cmd, "model", MODEL_NAME)
+	model := client.EmbeddingModel(modelName)
 	res, err := model.EmbedContent(ctx, genai.Text(content))
 	if err != nil {
 		log.Fatal("error embedding content:", err)

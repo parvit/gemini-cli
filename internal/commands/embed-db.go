@@ -203,12 +203,14 @@ func runEmbedDBCmd(cmd *cobra.Command, args []string) {
 	log.Printf("Found %d values to embed", len(texts))
 
 	ctx := context.Background()
-	client, err := newGenaiClient(ctx, cmd)
+	client, err := newGenAiClient(ctx, cmd)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Close()
-	em := client.EmbeddingModel(mustGetStringFlag(cmd, "model"))
+
+	modelName := mustGetStringFlagEnvOverride(cmd, "model", MODEL_NAME)
+	em := client.EmbeddingModel(modelName)
 
 	batchSize := mustGetIntFlag(cmd, "batch-size")
 	numBatches := len(texts) / batchSize
