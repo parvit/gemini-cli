@@ -59,6 +59,20 @@ func runPromptCmd(cmd *cobra.Command, args []string) {
 	var promptParts []genai.Part
 
 	if sysPrompt := mustGetStringFlag(cmd, "system"); sysPrompt != "" {
+		sysPrompt = strings.TrimSpace(sysPrompt)
+
+		if strings.HasPrefix(sysPrompt, "$load") {
+			parts := strings.Split(sysPrompt, " ")
+			if f, err := os.Stat(parts[1]); err != nil || f.IsDir() {
+				panic("Invalid system prompt")
+			}
+
+			sysPromptData, _ := os.ReadFile(parts[1])
+			sysPrompt = string(sysPromptData)
+
+			log.Println(">> system prompt <<")
+			log.Println(sysPrompt)
+		}
 		promptParts = append(promptParts, genai.Text(sysPrompt))
 	}
 
