@@ -22,6 +22,9 @@ func mustGetStringFlagEnvOverride(cmd *cobra.Command, name string, envName strin
 	if err != nil {
 		panic(err)
 	}
+	if v != "" {
+		return v
+	}
 
 	value := strings.TrimSpace(os.Getenv(envName))
 	if len(value) > 0 {
